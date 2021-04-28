@@ -58,7 +58,9 @@ Permite crear consultas de varias tablas en una sola con datos no repetidos
 ### Subconsulta
 Consulta que se realiza dentro de otra consulta
 
-Ejemplo: SELECT lastName,firstName FROM employees WHERE officeCode **IN** (SELECT officeCode FROM offices WHERE country = 'USA');
+~~~~ 
+Ejemplo: SELECT lastName,firstName FROM employees WHERE officeCode **IN** (SELECT officeCode FROM offices WHERE country = 'USA'); 
+~~~~
 
 ## Funciones Escalares
 Son funciones que retornan un único valor
