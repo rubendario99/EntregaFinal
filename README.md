@@ -60,7 +60,7 @@ Consulta que se realiza dentro de otra consulta
 
 Ejemplo: 
 ~~~~ 
-SELECT lastName,firstName FROM employees WHERE officeCode [](url)IN (SELECT officeCode FROM offices WHERE country = 'USA'); 
+SELECT lastName,firstName FROM employees WHERE officeCode IN (SELECT officeCode FROM offices WHERE country = 'USA'); 
 ~~~~
 
 ## Funciones Escalares
