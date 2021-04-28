@@ -38,4 +38,30 @@
   - COMMIT
   - ROLLBACK
 
+### DML (Data Manipulation Language)
+- Sintaxis normalizada
+  - Comandos   (select, insert...)
+  - Cláusulas  (from, where...)
+  - Operadores (distinct, like...)
+- No sensitivo
+- Recomendando ';', al final de las consultas aunque no sea obligatorio
 
+### Operadores Lógicos
+- AND
+- OR
+- NOT
+- IN
+
+### Consulta UNION
+Permite crear consultas de varias tablas en una sola con datos no repetidos
+
+### Subconsulta
+Consulta que se realiza dentro de otra consulta
+
+Ejemplo: SELECT lastName,firstName FROM employees WHERE officeCode **IN** (SELECT officeCode FROM offices WHERE country = 'USA');
+
+## Funciones Escalares
+Son funciones que retornan un único valor
+- Ejemplos:
+  - LCASE()
+  - CONCAT()
