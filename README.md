@@ -68,3 +68,24 @@ Son funciones que retornan un único valor
 - Ejemplos:
   - LCASE()
   - CONCAT()
+
+### Funciones Agregado
+
+Permiten realizar cálculos sobre un conjunto de valores y retornar un único valor.
+- Ejemplos:
+  - Count()
+  - Max()
+  - Min()
+  - Sum()
+  - Avg()
+
+### Consultas Agrupación
+Permiten agrupar los datos según los parámetros que decidamos y posteriormente trabajar sobre estas agrupaciones
+
+Ejemplo: 
+~~~~ 
+SELECT COUNT(*) AS TotalFilas, COUNT(ShipRegion) AS FilasNoNulas, 
+MIN(ShippedDate) AS FechaMin, MAX(ShippedDate) AS FechaMax, 
+SUM(Freight) AS PesoTotal, AVG(Freight) PesoPromedio
+FROM Orders
+~~~~
