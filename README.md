@@ -84,8 +84,7 @@ Permiten agrupar los datos según los parámetros que decidamos y posteriormente
 
 Ejemplo: 
 ~~~~ 
-SELECT COUNT(*) AS TotalFilas, COUNT(ShipRegion) AS FilasNoNulas, 
-MIN(ShippedDate) AS FechaMin, MAX(ShippedDate) AS FechaMax, 
-SUM(Freight) AS PesoTotal, AVG(Freight) PesoPromedio
-FROM Orders
+SELECT COUNT(CustomerID), Country
+FROM Customers
+GROUP BY Country;
 ~~~~
