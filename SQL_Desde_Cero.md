@@ -1,6 +1,3 @@
-
-# EntregaFinal
-
 ## SQL desde Cero
 
 ### Objetos BBDD
