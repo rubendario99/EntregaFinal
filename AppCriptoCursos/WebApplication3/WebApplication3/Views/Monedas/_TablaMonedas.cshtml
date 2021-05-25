@@ -1,0 +1,114 @@
+﻿@model IEnumerable<WebApplication3.Models.Moneda>
+
+@Styles.Render("~/Content/DataTables")
+@Scripts.Render("~/bundles/datatables")
+
+
+<div id="divBorrarMoneda"></div>
+<div id="divEditarMoneda"></div>
+
+
+<table class="table" id="datatableMonedas">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Favorita)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cambio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Activa)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.FechaCreacion)
+            </th>
+            <td>
+            </td>
+        </tr>
+    </thead>
+
+    @foreach (var item in Model)
+    {
+        <tbody>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                <td>
+                    @Html.DisplayFor(modelItem => item.Favorita)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cambio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Activa)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaCreacion)
+                </td>
+                <td>
+                    <button id="btnModalEditar" class="btnModalEditar btn-outline-primary btn" name="btnEditar" value="@item.Moneda_PK">Editar <i class="fa fa-edit"></i></button>
+                    <button id="btnModalBorrar" class="btnModalBorrar btn-outline-warning btn" name="btnModalBorrar" value="@item.Moneda_PK">Borrar <i class="fa fa-trash-alt"></i></button>
+                </td>
+            </tr>
+        </tbody>
+    }
+</table>
+
+@section Scripts{
+
+}
+
+<script>
+
+    $(document).ready(function () {
+        $('#datatableMonedas').dataTable({
+            "ordering": true
+        });
+    });
+
+    $(".btnModalBorrar").click(function () {
+        var moneda_pk = $(this).val();
+        $.ajax({
+            url: "@Url.Action("RecuperarMonedaBorrar")",
+            type: 'POST',
+            dataType: 'json',
+            cache: 'false',
+            data: { id: moneda_pk },
+                success: function (data) {
+                    if (data.status == "OK") {
+                        $("#divBorrarMoneda").html(data.vistaBorrar);
+                        $("#modalBorrarMoneda").modal('show');
+                    }
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                }
+        });
+    });
+
+    $(".btnModalEditar").click(function () {
+       var moneda_pk = $(this).val();
+        $.ajax({
+            url: "@Url.Action("RecuperarMonedaEditar")",
+            type: 'POST',
+            dataType: 'json',
+            cache: 'false',
+            data: { id: moneda_pk },
+                success: function (data) {
+                    if (data.status == "OK") {
+                        $("#divEditarMoneda").html(data.vistaEditar);
+                        $("#modalEditarMoneda").modal('show');
+                    }
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                }
+        });
+    });
+
+</script>
+

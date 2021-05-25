@@ -1,0 +1,70 @@
+﻿@model IEnumerable<WebApplication3.Models.Moneda>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@if (TempData["mensajeExito"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>@TempData["mensajeExito"]</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Favorita)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Cambio)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Activa)
+        </th>
+        <th>
+            @Html.DisplayNameFor(m => m.FechaCreacion)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            <td>
+                @Html.DisplayFor(modelItem => item.Favorita)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cambio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Activa)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaCreacion)
+            </td>
+            <td>
+                @Html.ActionLink("Editar", "Edit", new { id = item.Moneda_PK }) |
+                @Html.ActionLink("Detalles", "Details", new { /* id=item.PrimaryKey */ }) |
+                <a href="/Monedas/Delete/@item.Moneda_PK" onclick="return quieresBorrar()">Borrar</a>
+            </td>
+        </tr>
+    }
+</table>
+@section scripts{
+    <script>
+        function quieresBorrar() {
+            return confirm("¿Seguro quieres borrar esta moneda");
+        }
+    </script>
+}

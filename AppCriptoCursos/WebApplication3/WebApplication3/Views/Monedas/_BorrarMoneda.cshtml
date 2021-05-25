@@ -1,0 +1,47 @@
+﻿@model WebApplication3.Models.Moneda
+
+<!-- Modal -->
+<div class="modal" id="modalBorrarMoneda" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Borrar @Model.Nombre</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro que quieres borrar la moneda <strong>@Model.Nombre</strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
+                <button type="button" class="btn btn-primary" id="btnBorrar" value="@Model.Moneda_PK">Borrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#btnBorrar").click(function () {
+        var moneda_pk = $(this).val();
+        $.ajax({
+            url: "@Url.Action("BorrarMoneda")",
+            type: 'POST',
+            dataType: 'json',
+            cache: 'false',
+            data: { id: moneda_pk },
+                success: function (data) {
+                    if (data.status == "OK") {
+                        $("#divCorrecto").modal('show');
+                        $("#modalBorrarMoneda").modal('hide');
+                        $("#divCorrecto").delay(1000).hide(200);
+                        $(".modal-backdrop").remove();
+                        rellenarTablaMonedas();
+                    }
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                }
+        });
+    });
+</script>

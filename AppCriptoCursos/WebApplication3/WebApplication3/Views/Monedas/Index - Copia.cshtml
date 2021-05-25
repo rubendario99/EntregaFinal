@@ -1,0 +1,110 @@
+﻿@model IEnumerable<WebApplication3.Models.Moneda>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<div class="modal fade" id="modalEditar" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+</div>
+
+<button id="btnCrear" class="btnCrear btn-outline-primary btn" name="btn">Crear Moneda</button>
+<hr />
+<div class="card">
+    <div class="card-header bg-light">Lista Monedas</div>
+    <div class="card-body">
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Favorita)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cambio)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Activa)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => m.FechaCreacion)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Favorita)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Cambio)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Activa)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FechaCreacion)
+                    </td>
+                    <td>
+                        <button id="btnEditar" class="btnEditar btn-outline-primary btn" name="btn" value="@item.Moneda_PK">Editar</button>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        function abrirModalEditar(id) {
+            $.ajax({
+                url: "@Url.Action("EditarModal")",
+                type: 'POST',
+                dataType: 'json',
+                cache: 'false',
+                data: { id: id,crear:crear },
+                success: function (data) {
+                    if (data.status == "OK" && data.crear==false) {
+                        $("#modalEditar").html(data.modalEditar);
+                        $("modalEditar").height($(window).height() * 0.9);
+                        $('#modalEditar').modal('show');
+                    }
+                    if (data.status == "OK" && data.crear == true) {
+                        $("#modalEditar").html(data.modalEditar);
+                        $('#modalEditar').modal('show');
+                    }
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                }
+            });
+        }
+
+        function quieresBorrar() {
+            return confirm("¿Seguro quieres borrar esta moneda");
+        }
+        function onBegin() {
+            alert("begin")
+        }
+
+        //Hacemos click en el botón de editar
+        $(".btnEditar").click(function () {
+            var id = $(this).val();
+            abrirModalEditar(id,crear=false);
+        });
+
+
+        //Hacemos click en el botón de crear
+        $("#btnCrear").click(function () {
+            abrirModalEditar(crear=true)
+        });
+    </script>
+}

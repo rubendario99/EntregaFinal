@@ -1,0 +1,116 @@
+﻿@model WebApplication3.Models.Moneda
+
+@Scripts.Render("~/bundles/globalize")
+@Scripts.Render("~/bundles/jqueryval")
+
+
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Crear Moneda</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+
+            @using (Ajax.BeginForm("CrearMoneda", "Monedas", new AjaxOptions
+            {
+                HttpMethod = "POST",
+                OnBegin = "OnBegin",
+                OnSuccess = "onSuccess",
+                UpdateTargetId = "divResultado",
+                OnFailure = "FailMessage"
+            }, new { id = "formulario" }
+))
+            {
+                <div class="form-horizontal">
+                    <div id="divResultado">
+                    </div>
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", @id = "olaola" } })
+                            @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Favorita, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <div class="checkbox">
+                                @Html.EditorFor(model => model.Favorita)
+                                @Html.ValidationMessageFor(model => model.Favorita, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Cambio, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Cambio, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Cambio, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Activa, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <div class="checkbox">
+                                @Html.EditorFor(model => model.Activa)
+                                @Html.ValidationMessageFor(model => model.Activa, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button value="Create" class="btnCreate btn btn-dark" id="btnCreate">Crear</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="modal-footer">
+        </div>
+    </div>
+</div>
+
+<script>
+
+    //$('form').submit(function (e) {
+    //    debugger;
+    //    //Evitamos que se ejecute el post
+    //    e.preventDefault();
+    //    //Guardamos los datos del formulario en la variable form
+    //    var form = $(this);
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "monedas/CrearMoneda",
+    //        data: form.serialize(), // serializes the form's elements.
+    //        success: function (data) {
+    //            if (data.status == "OK") {
+    //                $('#divCrearMoneda').modal('hide');
+    //                //$('#modalCorrecto').show();
+    //                $('#divCorrecto').show();
+    //                //Esperamos 1 segundo y ocultamos el div
+    //                $("#divCorrecto").delay(1500).hide(500);
+    //                //Recargamos la tabla
+    //                rellenarTablaMonedas();
+    //            }
+    //            if (data.status == "KO") {
+    //            }
+    //        }
+    //    });
+    //});
+
+
+    function onSuccess() {
+        $('#divCrearMoneda').modal('hide');
+        $('#divCorrecto').show();
+        $("#divCorrecto").delay(1500).hide(500);
+        rellenarTablaMonedas();
+    }
+    function FailMessage() {
+    }
+    function OnBegin() {
+    }
+</script>

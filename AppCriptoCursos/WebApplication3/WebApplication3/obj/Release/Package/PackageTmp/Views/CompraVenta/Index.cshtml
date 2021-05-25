@@ -1,0 +1,126 @@
+﻿@model WebApplication3.Models.ViewModels.RegistrarOperaciones_VM
+
+@{
+    ViewBag.Title = "Compra Venta";
+}
+
+@*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
+
+<h2>Compra Venta</h2>
+
+@using (Html.BeginForm())
+{
+
+    @Html.HiddenFor(m => m.listaMonedas)
+    @Html.HiddenFor(m => m.tiposOperaciones)
+    @Html.HiddenFor(m => m.operaciones.FechaCreacion)
+
+    if (ViewBag.MensajeExito!= null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>@ViewBag.MensajeExito</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    <div class="form-group">
+        <label for="Moneda">Moneda</label>
+        @Html.DropDownListFor(m => m.operaciones.Moneda_PK, new SelectList(Model.listaMonedas, "moneda_pk", "nombre"), htmlAttributes: new { @class = "selectpicker", @id = "selectpicker1" })
+        <br />
+    </div>
+
+    <div class="form-group">
+        <label for="Tipo Operacion">Tipo operación</label>
+        @Html.DropDownListFor(m => m.operaciones.TipoOperacion_PK, new SelectList(Model.tiposOperaciones, "TipoOperacion_PK", "Nombre"), htmlAttributes: new { @class = "selectpicker", @id = "selectpicker2" })
+    </div>
+
+    <div class="form-group">
+        <label for="fecha">Fecha</label>
+        <div class="input-group date" id="datetimepicker" data-target-input="nearest">
+            @Html.TextBoxFor(m => m.fecha, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @data_target = "#datetimepicker" } })
+            @Html.ValidationMessageFor(model => model.fecha, "", new { @class = "text-danger" })
+            @*<input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker" />*@
+            <div class="input-group-append" data-target="#datetimepicker" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="hora">Hora</label>
+        <div class="input-group date" id="datetimepicker2" data-target-input="nearest">
+            @Html.TextBoxFor(m => m.hora, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @data_target = "#datetimepicker2" } })
+            @*<input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker2" />*@
+            <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-clock"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="Importe">Importe €</label>
+        @Html.EditorFor(model => model.operaciones.Importe, new { htmlAttributes = new { @class = "form-control", @id = "Importe" } })
+        @Html.ValidationMessageFor(model => model.operaciones.Importe, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        <label for="monedasRecibidas">Monedas recibidas</label>
+        @Html.EditorFor(model => model.operaciones.NumMonedas, new { htmlAttributes = new { @class = "form-control", value = "Importe", @readonly = "readonly", @id = "monedasRecibidas" } })
+    </div>
+
+    <input id="btnFinal" type="submit" value="Comprar" class="btn btn-primary" />
+}
+
+@section scripts{
+    <script>
+
+        function ajaxCambioCripto() {
+
+            //Llamada ajax
+            var moneda_PK = $('#selectpicker1 option:selected').val();
+            $.ajax({
+                url: "@Url.Action("RecuperarTasaCambio")",
+                type: 'POST',
+                data: {
+                    'id': moneda_PK
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.status == "OK") {
+                        var tasaCambio = data.tasaCambio;
+                        var monedasTotales = $('#Importe').val() * tasaCambio;
+                        var monedasTotalesFixed = monedasTotales.toFixed(6);
+                        $("#monedasRecibidas").val(monedasTotalesFixed);
+                    }
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                }
+            });
+        }
+
+        //Ponemos formato local
+        $('#datetimepicker').datetimepicker({ locale: "es", format: "L" });
+        $('#datetimepicker2').datetimepicker({ locale: "es", format: "LT" });
+
+        //Añadimos el atributo para poder buscar en el dropdown
+        $('#selectpicker1').attr('data-live-search', true);
+
+        //Cambiamos el texto del botón según la operación que se vaya a realizar
+        $("#selectpicker2").change(function () {
+            $("#btnFinal").val($('#selectpicker2 option:selected').text());
+        });
+
+        //Cambiamos la cantidad de cripto recibida según el dinero
+        $("#Importe").keyup(function () {
+            ajaxCambioCripto();
+        });
+
+        //Cambiamos la tasa de cambio si seleccionamos otra moneda
+        $("#selectpicker1").change(function () {
+            ajaxCambioCripto();
+        });
+    </script>
+}

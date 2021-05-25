@@ -1,0 +1,172 @@
+﻿@model WebApplication3.Models.ViewModels.Informe_VM
+@{
+    ViewBag.Title = "Informe";
+}
+
+<h2>Informe</h2>
+
+
+<div class="modal fade" id="modalOperaciones" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+</div>
+
+
+@using (Ajax.BeginForm("prueba", "Informe", new AjaxOptions
+{
+    HttpMethod = "POST",
+    UpdateTargetId = "divResultado",
+    OnSuccess = "onSuccess",
+    OnFailure = "FailMessage",
+    OnBegin = "AjaxBegin"
+}))
+{
+    <div class="card">
+        <div class="card-header badge-dark">
+            Filtros
+        </div>
+        <div class="card-body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 col-sm-6">
+                        <div id="dropdownMonedas">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="ultimosMovimientos">Últimos movimientos</label>
+                        @Html.DropDownListFor(m => m.movimientoSemana, new SelectList(Model.listaMovimientos, "value", "text"), htmlAttributes: new { @class = "selectpicker", @id = "selectpickerMovimientos" })
+                    </div>
+                    <div class="col-lg-1 text-right">
+                        <input id="btnFinal" name="btn" type="submit" value="Buscar" class="btn btn-primary" />
+                    </div>
+                    <div class="col-lg-2 text-right">
+                        <input id="btnExportar" type="submit" value="Exportar" class="btn btn-primary" name="btn" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <p id="fechaCreacion"></p>
+                    </div>
+                    <div class="col-4">
+                        <span id="btnRellenar" class="btn btn-primary" name="btn">Rellenar</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+}
+
+<div id="divResultado">
+    <table id="tablaInforme" class="table table-striped table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th>Moneda</th>
+                <th>Operacion</th>
+                <th>Importe €</th>
+                <th>Monedas</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var operacion in Model.listaOperaciones)
+            {
+                <tr>
+                    <td>
+                        @Model.listaMonedas.Where(x => x.Moneda_PK == operacion.Moneda_PK).FirstOrDefault().Nombre
+                        <button id="btnAmpliar" class="ampliar btn-primary btn-sm" name="btn" value="@operacion.Operacion_PK">Ampliar</button>
+                    </td>
+                    <td>@Model.listaTipoOperacion.Where(x => x.TipoOperacion_PK == operacion.TipoOperacion_PK).FirstOrDefault().Nombre</td>
+                    <td>@operacion.Importe</td>
+                    <td>@operacion.NumMonedas</td>
+                    <td>@operacion.FechaOperacion</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@section scripts{
+    @Scripts.Render("~/bundles/datatables")
+    <script>
+        //Cargamos y configuramos el datatable
+        function configDataTable() {
+            $('#tablaInforme').dataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.22/i18n/Spanish.json",
+                    "order": [[3, "asc"]]
+                }
+            });
+        }
+        configDataTable();
+
+        //Hacemos click en el botón de rellenar
+        $("#btnRellenar").click(function () {
+            recuperarListaMonedas();
+        });
+
+        //Boton close de la modal
+        $("#btnClose").click(function () {
+            $('#modalOperaciones').modal('hide');
+        });
+
+        //Hacemos click en el botón de rellenar
+        $(".ampliar").click(function () {
+            var operacion_pk = $(this).val();
+            recuperarOperacionCompleta(operacion_pk);
+
+        });
+    </script>
+    <script>
+
+        function recuperarListaMonedas() {
+            $.ajax({
+                url: "@Url.Action("RecuperarListaMonedas2")",
+                type: 'POST',
+                dataType: 'json',
+                cache : 'false',
+                success: function (data) {
+
+                    if (data.status == "OK") {
+                        var dropdown = $("#listaMonedas");
+
+                        $("#dropdownMonedas").html(data.vista);
+                        $("#listaMonedas").selectpicker();
+                    }
+                },
+
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                }
+            });
+        }
+        debugger;
+        function recuperarOperacionCompleta(operacion_pk) {
+            $.ajax({
+                url: "@Url.Action("RecuperarOperacionCompleta")",
+                type: 'POST',
+                dataType: 'json',
+                cache: 'false',
+                data: { operacion_pk: operacion_pk },
+                success: function (data) {
+                    debugger;
+                    if (data.status == "OK") {
+                        $("#modalOperaciones").html(data.modalOperacion);
+                        $('#modalOperaciones').modal('show');
+                    }
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                }
+            });
+        }
+        function FailMessage() {
+            alert("Error // KO");
+        }
+        function AjaxBegin() {
+            $('#divCarga').show();
+        }
+        function onSuccess() {
+            $("#divCarga").hide();
+            configDataTable();
+        }
+    </script>
+}

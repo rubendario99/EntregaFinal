@@ -1,0 +1,32 @@
+﻿@model WebApplication3.Models.Moneda
+
+<div id="crearMoneda">
+    @Html.Partial("~/Views/Monedas/_CrearMoneda.cshtml", Model)
+</div>
+
+<script>
+        //Click en boton crear moneda
+    $("#btnCreate").click(function (e) {
+        var moneda = $(form).serialize();
+        alert("sasa");
+        debugger;
+        e.preventDefault();
+        $.ajax({
+                url: "@Url.Action("Create")",
+                type: 'POST',
+                dataType: 'json',
+                cache: 'false',
+                //data: {moneda,moneda},
+                success: function (data) {
+                    if (data.status == "OK") {
+                        //$("#divCrearMoneda").html(data.vistaCrear);
+                        //$("#divCrearMoneda").modal("show");
+                    }
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                }
+            });
+        });
+
+</script>

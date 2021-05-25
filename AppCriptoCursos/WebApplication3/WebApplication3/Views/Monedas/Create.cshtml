@@ -1,0 +1,87 @@
+﻿@model WebApplication3.Models.Moneda
+
+@{
+    ViewBag.Title = "Create";
+}
+
+@section scripts{
+    @*@Scripts.Render("~/bundles/jqueryval")*@
+}
+@using (Ajax.BeginForm("prueba", "Monedas", new AjaxOptions
+{
+    HttpMethod = "POST",
+    OnBegin = "OnBegin",
+    OnSuccess = "SuccessMessage",
+    UpdateTargetId = "divResultado",
+    OnFailure = "FailMessage"
+}, new { id = "formulario" }
+))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h4>Moneda</h4>
+
+        <div id="divResultado">
+        </div>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", @id = "olaola" } })
+                @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Favorita, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.Favorita)
+                    @Html.ValidationMessageFor(model => model.Favorita, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Cambio, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Cambio, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Cambio, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Activa, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.Activa)
+                    @Html.ValidationMessageFor(model => model.Activa, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" value="Create" class="btn btn-dark">Crear</button>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    function SuccessMessage() {
+        $('#divCarga').hide();
+        $('#divResultado').show();
+
+        $(':input', '#formulario')
+            .not(':button, :submit, :reset, :hidden')
+            .val('')
+            .removeAttr('checked')
+            .removeAttr('selected');
+    }
+    function FailMessage() {
+        $('#divCarga').hide();
+    }
+    function OnBegin() {
+        $('#divCarga').show();
+    }
+</script>
+

@@ -1,0 +1,33 @@
+﻿@model WebApplication3.Models.ViewModels.Informe_VM
+
+@Html.DropDownListFor(m => m.operaciones.Moneda_PK, new SelectList(Model.listaMonedas, "moneda_pk", "nombre"), htmlAttributes: new {@id = "listaMonedas" })
+
+<script>
+    $("#listaMonedas").change(function () {
+        recuperarFechaCreacion();
+    });
+
+    function recuperarFechaCreacion() {
+            var moneda_PK = $('#listaMonedas option:selected').val();
+            $.ajax({
+                url: "@Url.Action("RecuperarFechaCreacion")",
+                type: 'POST',
+                data: {
+                    'id': moneda_PK,
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.status == "OK") {
+                        $("#fechaCreacion").empty();
+                        $("#fechaCreacion").append("Fecha creación: " + data.fechaCreacionObtenida);
+                    }
+                    if (data.status == "KO") {
+                        $("#fechaCreacion").empty();
+                    }
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                }
+            });
+        }
+</script>

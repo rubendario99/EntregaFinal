@@ -1,0 +1,89 @@
+﻿<style>
+
+    body {
+        padding-top: 0 !important;
+    }
+
+    h2 {
+        padding-top: 33px !important;
+        padding-bottom: 22px !important
+    }
+
+    h4 {
+        padding-top: 35px !important;
+    }
+</style>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/selectpicker")
+    @Styles.Render("~/Content/datepickercss")
+    @Styles.Render("~/Content/fontawesome")
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav nav justify-content-center">
+                <li class="navbar-brand">
+                    <a class="navbar-brand" href="/home">Inicio <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="navbar-brand dropdown">
+                    <a class="nav-link dropdown-toggle" href="/monedas" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Gestión monedas
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="/monedas">Lista</a>
+                        <a class="dropdown-item" href="/monedas/create">Crear nueva moneda</a>
+                    </div>
+                </li>
+                <li class="navbar-brand">
+                    <a class="nav-link" href="/informe">Informe</a>
+                </li>
+                <li class="navbar-brand">
+                    <a class="nav-link" href="/compraventa">Compraventa</a>
+                </li>
+                <li class="navbar-brand">
+                    <a class="nav-link" href="/home/about">Acerca de</a>
+                </li>
+                <li class="navbar-brand">
+                    <a class="nav-link" href="/home/contact">Contacto</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container body-content">
+        @RenderBody()
+        @Html.Partial("~/Views/_VistasInfo/_Carga.cshtml")
+        @Html.Partial("~/Views/_VistasInfo/_MensajeCorrecto.cshtml")
+        @Html.Partial("~/Views/_VistasInfo/_test.cshtml")
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Mi aplicación ASP.NET</p>
+        </footer>
+    </div>
+
+
+    @Scripts.Render("~/bundles/jquery")
+
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/selectpicker")
+    @Scripts.Render("~/bundles/datepicker")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/fontawesome")
+
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+
+

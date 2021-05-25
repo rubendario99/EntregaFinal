@@ -1,0 +1,43 @@
+﻿@model WebApplication3.Models.ViewModels.Informe_VM
+
+
+@{Layout = null; }
+
+<table id="tablaInforme" class="table table-striped table-bordered" style="width:100%">
+    <thead>
+        <tr>
+            <th>Moneda</th>
+            <th>Operacion</th>
+            <th>Importe €</th>
+            <th>Monedas</th>
+            <th>Fecha</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var operacion in Model.listaOperaciones)
+        {
+            <tr>
+                <td>
+                    @Model.listaMonedas.Where(x => x.Moneda_PK == operacion.Moneda_PK).FirstOrDefault().Nombre
+                    <button id="btnAmpliar" class="ampliar btn-primary btn-sm" name="btn">Ampliar</button>
+                </td>
+                <td>@Model.listaTipoOperacion.Where(x => x.TipoOperacion_PK == operacion.TipoOperacion_PK).FirstOrDefault().Nombre</td>
+                <td>@operacion.Importe</td>
+                <td>@operacion.NumMonedas</td>
+                <td>@operacion.FechaOperacion</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts{
+    @Scripts.Render("~/bundles/datatables")
+
+    <script>
+        //Hacemos click en el botón de rellenar
+        $(".ampliar").click(function () {
+            alert("hola")
+        });
+    </script>
+
+}

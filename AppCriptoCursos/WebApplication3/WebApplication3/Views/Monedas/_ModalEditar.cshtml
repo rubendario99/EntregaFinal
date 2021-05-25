@@ -1,0 +1,141 @@
+﻿@model WebApplication3.Models.Moneda
+
+<style>
+    #btnClose {
+        margin-right: 14%;
+        width: 40%;
+    }
+
+    #btnGuardar {
+        width: 40%;
+    }
+</style>
+
+
+
+<!-- Modal -->
+@*<div class="modal fade" id="modalOperaciones" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">*@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header bg-light">
+            <h5 class="modal-title" id="exampleModalLabel">EDITAR</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        @*@using (Ajax.BeginForm("Edit", "Monedas", new AjaxOptions
+            {
+                HttpMethod = "POST",
+                OnSuccess = "onSuccess",
+                OnFailure = "onFailure",
+                OnBegin = "onBegin"
+            }))
+            {*@
+
+        @using (Html.BeginForm())
+        {
+
+            @Html.HiddenFor(m => m.Moneda_PK)
+            <div class="modal-body">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </div>
+                        <div class="col">
+                            @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <hr />
+
+                    <div class="row">
+                        <div class="col">
+                            @Html.LabelFor(model => model.Cambio, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </div>
+                        <div class="col">
+                            @Html.EditorFor(model => model.Cambio, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Cambio, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <hr />
+
+                    <div class="row">
+                        <div class="col">
+                            @Html.LabelFor(model => model.FechaCreacion, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </div>
+                        <div class="col">
+                            @Html.EditorFor(model => model.FechaCreacion, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.FechaCreacion, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <hr />
+
+                    <div class="row">
+                        <div class="col">
+                            @Html.LabelFor(model => model.Favorita, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </div>
+                        <div class="col">
+                            <div class="checkbox">
+                                @Html.EditorFor(model => model.Favorita)
+                                @Html.ValidationMessageFor(model => model.Favorita, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col">
+                            @Html.LabelFor(model => model.Activa, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </div>
+                        <div class="col">
+                            @Html.EditorFor(model => model.Activa)
+                            @Html.ValidationMessageFor(model => model.Activa, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-lg left" data-dismiss="modal" id="btnClose">Salir</button>
+                    <button type="submit" class="btn btn-primary btn-lg" id="btnGuardar">Guardar</button>
+                </div>
+            </div>
+        }
+
+    </div>
+
+    @*</div>*@
+    @section Scripts{
+        @*@Scripts.Render("~/bundles/jqueryval")*@
+        @*<script src="~/Scripts/globalize.js"></script>
+            <script src="~/Scripts/globalize/number.js"></script>
+            <script src="~/Scripts/globalize/date.js"></script>
+            <script src="~/Scripts/jquery.validate.globalize.js"></script>
+            <script src="~/Scripts/locale/es.js"></script>*@
+    }
+
+    <script>
+
+        $('form').submit(function (e) {
+            debugger;
+            //Evitamos que se ejecute el post
+            e.preventDefault();
+            //Guardamos los datos del formulario en la variable form
+            var form = $(this);
+            $.ajax({
+                type: "POST",
+                url: "monedas/editjson",
+                data: form.serialize(), // serializes the form's elements.
+                success: function (data) {
+                    if (data.status == "OK") {
+                        $('#modalEditar').modal('hide');
+                        //$('#modalCorrecto').show();
+                        $('#divCorrecto').show();
+                        //Esperamos 1 segundo y ocultamos el div
+                        $("#divCorrecto").delay(1500).hide(500);
+                    }
+                    if (data.status == "KO") {
+                    }
+                }
+            });
+        });
+    </script>

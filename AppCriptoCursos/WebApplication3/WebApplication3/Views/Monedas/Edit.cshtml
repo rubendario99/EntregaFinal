@@ -1,0 +1,79 @@
+﻿@model WebApplication3.Models.Moneda
+
+
+@{
+    ViewBag.Title = "Editar";
+
+}
+@section scripts{
+    @*@Scripts.Render("~/bundles/jqueryval")*@
+    <script src="~/Scripts/globalize.js"></script>
+    <script src="~/Scripts/globalize/date.js"></script>
+    <script src="~/Scripts/jquery.validate.globalize.js"></script>
+
+}
+
+@using (Html.BeginForm())
+{
+    <h4>Moneda</h4>
+    <hr />
+
+    @Html.ValidationSummary(true, "", new { @class = "text-warning" })
+    @Html.HiddenFor(model => model.Moneda_PK)
+
+    <div class="row">
+        <div class="col">
+            @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+        </div>
+        <div class="col">
+            @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+        </div>
+        <div class="col">
+            @Html.LabelFor(model => model.Cambio, htmlAttributes: new { @class = "control-label col-md-2" })
+        </div>
+        <div class="col">
+            @Html.EditorFor(model => model.Cambio, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Cambio, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            @Html.LabelFor(model => model.FechaCreacion, htmlAttributes: new { @class = "control-label col-md-2" })
+        </div>
+        <div class="col">
+            @Html.EditorFor(model => model.FechaCreacion, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.FechaCreacion, "", new { @class = "text-danger" })
+        </div>
+        <div class="col">
+            @Html.LabelFor(model => model.Favorita, htmlAttributes: new { @class = "control-label col-md-2" })
+        </div>
+        <div class="col">
+            <div class="checkbox">
+                @Html.EditorFor(model => model.Favorita)
+                @Html.ValidationMessageFor(model => model.Favorita, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            @Html.LabelFor(model => model.Activa, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.EditorFor(model => model.Activa)
+        </div>
+        <div class="col">
+            @Html.ValidationMessageFor(model => model.Activa, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <input type="submit" value="Guardar" class="btn btn-primary" />
+        </div>
+        <div class="col">
+            <a class="btn btn-secondary" href="/monedas" role="button">Lista</a>
+        </div>
+    </div>
+}
+

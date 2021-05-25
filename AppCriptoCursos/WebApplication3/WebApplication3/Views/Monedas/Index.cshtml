@@ -1,0 +1,71 @@
+﻿@model IEnumerable<WebApplication3.Models.Moneda>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+@*@Styles.Render("~/Content/datatables")*@
+
+<h2>ADMINISTRACIÓN DE MONEDAS</h2>
+
+<span id="btnModalCrear" class="btnModalCrear btn-outline-primary btn" name="btnCrear">Crear Moneda <i class="fa fa-plus-circle"></i></span>
+
+<hr />
+
+<div id="divListaMonedas"></div>
+
+<div class="modal fade" id="divCrearMoneda" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+
+@section Scripts{
+    @*@Scripts.Render("~/bundles/datatables")*@
+    <script>
+        //Indicamos que el código dentro de esto se ejecutará nada más cargar la vista
+        $(document).ready(function () {
+            rellenarTablaMonedas();
+            //$('#tablaMonedas').DataTable();
+        });
+
+        function rellenarTablaMonedas() {
+            //Inicializamos el datatable
+            //Llamada ajax
+            $.ajax({
+                url: "@Url.Action("RecuperarListaMonedas")",
+                type: 'POST',
+                dataType: 'json',
+                cache: 'false',
+                success: function (data) {
+                    if (data.status == "OK") {
+                        $("#divListaMonedas").html(data.vistaLista);
+                    }
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                }
+            });
+        }
+
+        //Click en boton crear moneda
+        $("#btnModalCrear").click(function () {
+            debugger;
+            $.ajax({
+                url: "@Url.Action("AbrirModalCrear")",
+                type: 'POST',
+                dataType: 'json',
+                cache: 'false',
+                success: function (data) {
+                    if (data.status == "OK") {
+                        $("#divCrearMoneda").html(data.vistaCrear);
+                        $("#divCrearMoneda").modal("show");
+                    }
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                }
+            });
+        });
+
+    </script>
+}
+
+
